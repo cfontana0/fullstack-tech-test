@@ -97,8 +97,29 @@ Questions
 
 1. What best practices have you used in your solution?
 
-**Answer Here**
+- Code Reusability and Modularity: Functions like getImageFromName were created in a separate helper file, enhancing code reusability. Also, using hooks like useState and useEffect allows for better state management and effect handling, making the code more modular.
+
+- Asynchronous Programming: The use of async/await syntax makes asynchronous code look more like traditional synchronous code, which can enhance readability and maintainability.
+
+- Error Handling: Try-catch blocks allow for proper error handling, providing meaningful feedback if something goes wrong.
+
+- Type Safety: Using TypeScript and defining types for the different variables and objects ensures that our code is safer and less prone to runtime errors. It also makes the codebase easier to understand and maintain.
+
+- CSS Animations: CSS animations were used for UI interactivity instead of JavaScript animations for better performance.
+
+- Use of GraphQL: The use of GraphQL for querying data allows for more efficient data fetching as we only fetch the data we need.
+
 
 2. What further steps would you take to improve your solution given more time?
 
-**Answer Here**
+- Performance Optimization: There could be areas where performance optimization would be beneficial. For example, using techniques like memoization.
+
+- Testing: This is always a good area to focus on when more time is available. More comprehensive tests could be added, including edge cases and error handling tests.
+
+- Input Validation: On the client side, adding input validation would improve the robustness of the code. This can prevent unnecessary requests from being sent to the server if they will be rejected due to bad input.
+
+- Documentation: More time could be spent on documenting the code, detailing the purpose and functionality of each module, class, function, etc. This could be valuable for the current developers and any new project developers.
+
+- Optimization: Profiling and benchmarking the code could identify potential bottlenecks or areas for improvement. This could lead to performance gains in the overall system.
+
+- Responsive Design: Although this design is already responsive, there might be room for more extensive testing and improvement for a wider range of devices and screen sizes.

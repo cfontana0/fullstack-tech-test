@@ -93,9 +93,9 @@ Then I should be given a 20% discount on the four drinks in the bundle, and the 
 
 ---
 
-Questions
+## Questions
 
-1. What best practices have you used in your solution?
+### 1. What best practices have you used in your solution?
 
 - Code Reusability and Modularity: Functions like getImageFromName were created in a separate helper file, enhancing code reusability. Also, using hooks like useState and useEffect allows for better state management and effect handling, making the code more modular.
 
@@ -110,7 +110,7 @@ Questions
 - Use of GraphQL: The use of GraphQL for querying data allows for more efficient data fetching as we only fetch the data we need.
 
 
-2. What further steps would you take to improve your solution given more time?
+### 2. What further steps would you take to improve your solution given more time?
 
 - Performance Optimization: There could be areas where performance optimization would be beneficial. For example, using techniques like memoization.
 

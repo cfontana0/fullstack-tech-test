@@ -2,6 +2,7 @@ import { ApolloServer } from 'apollo-server';
 import { Dirent } from 'fs';
 import { generateDataSources } from '../utils/generateDataSources';
 import { generateSubgraphSchema, loadModule } from '../utils/schema';
+import { gql } from 'apollo-server-core';
 
 let mockedSubgraph: ApolloServer;
 
@@ -16,7 +17,7 @@ describe('Repository Template Functionality', () => {
       mockEntireSchema: false,
       dataSources,
     });
-    await server.listen();
+    await server.listen({ port: 4001 })
     mockedSubgraph = server;
   });
   afterAll(async () => {
@@ -24,29 +25,24 @@ describe('Repository Template Functionality', () => {
   });
 
   it('Mocks typeDefs when resolvers are not defined - helloWorld.graphql', async () => {
-    //Arrange
     const query = 'query { hello }';
     const expected = { hello: 'Hello World' };
 
-    //Act
     const res = await mockedSubgraph.executeOperation({ query });
 
-    //Assert
     expect(res.data).toEqual(expected);
   });
+
   it('Load resolvers for .graphql file - bar.ts', async () => {
-    //Arrange
     const query = 'query { bar(id:"1") { name appendedName } }';
     const expected = { bar: { name: 'Bar', appendedName: 'Bar - appended' } };
 
-    //Act
     const res = await mockedSubgraph.executeOperation({ query });
 
-    //Assert
     expect(res.data).toEqual(expected);
   });
+
   it('Executes Location Entity Resolver', async () => {
-    //Arrange
     const query = `query ($representations: [_Any!]!) {
       _entities(representations: $representations) {
         ...on Foo {
@@ -61,23 +57,61 @@ describe('Repository Template Functionality', () => {
       _entities: [{ name: 'Foo' }],
     };
 
-    //Act
     const res = await mockedSubgraph.executeOperation({
       query,
       variables,
     });
 
-    //Assert
     expect(res.data).toEqual(expected);
   });
+
   it('Module not found returns undefined', async () => {
-    //Arrange
     const emptyDirent = new Dirent();
 
-    //Act
     const undefinedModule = await loadModule(emptyDirent);
 
-    //Assert
     expect(undefinedModule).toBeUndefined();
+  });
+
+  it('Calculates discounted price for two different drinks', async () => {
+    const drinks = ['Coca Cola', 'Fanta'];
+    const query = gql`query ($drinks: [String!]!) { calculatePrice(drinks: $drinks) { total details { price bundle } } }`;
+    const res = await mockedSubgraph.executeOperation({ query, variables: { drinks } });
+    expect(res?.data?.calculatePrice?.total).toEqual(1.9);
+  });
+
+  it('Calculates discounted price for three different drinks', async () => {
+    const drinks = ['Coca Cola', 'Fanta', 'Sprite'];
+    const query = gql`query ($drinks: [String!]!) { calculatePrice(drinks: $drinks) { total details { price bundle } } }`;
+    const res = await mockedSubgraph.executeOperation({ query, variables: { drinks } });
+    expect(res?.data?.calculatePrice?.total).toEqual(2.7);
+  });
+
+  it('Calculates discounted price for four different drinks', async () => {
+    const drinks = ['Coca Cola', 'Fanta', 'Sprite', 'Dr Pepper'];
+    const query = gql`query ($drinks: [String!]!) { calculatePrice(drinks: $drinks) { total details { price bundle } } }`;
+    const res = await mockedSubgraph.executeOperation({ query, variables: { drinks } });
+    expect(res?.data?.calculatePrice?.total).toEqual(3.2);
+  });
+
+  it('Calculates discounted price for five different drinks', async () => {
+    const drinks = ['Coca Cola', 'Fanta', 'Sprite', 'Dr Pepper', 'Iron Bru'];
+    const query = gql`query ($drinks: [String!]!) { calculatePrice(drinks: $drinks) { total details { price bundle } } }`;
+    const res = await mockedSubgraph.executeOperation({ query, variables: { drinks } });
+    expect(res?.data?.calculatePrice?.total).toEqual(3.75);
+  });
+
+  it('Calculates price for two same drinks', async () => {
+    const drinks = ['Coca Cola', 'Coca Cola'];
+    const query = gql`query ($drinks: [String!]!) { calculatePrice(drinks: $drinks) { total details { price bundle } } }`;
+    const res = await mockedSubgraph.executeOperation({ query, variables: { drinks } });
+    expect(res?.data?.calculatePrice?.total).toEqual(2);
+  });
+
+  it('Calculates discounted price for four different drinks and one same drink', async () => {
+    const drinks = ['Coca Cola', 'Coca Cola', 'Fanta', 'Sprite', 'Dr Pepper'];
+    const query = gql`query ($drinks: [String!]!) { calculatePrice(drinks: $drinks) { total details { price bundle } } }`;
+    const res = await mockedSubgraph.executeOperation({ query, variables: { drinks } });
+    expect(res?.data?.calculatePrice?.total).toEqual(4.2);
   });
 });

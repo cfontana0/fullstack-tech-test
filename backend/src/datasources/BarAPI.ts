@@ -9,7 +9,25 @@
  * ---------------------------------------------------------------
  */
 
-export type StringNullable = string | null;
+export interface Drink {
+  name: string;
+
+  /** @format float */
+  price: number;
+  img: string;
+}
+
+export interface PriceDetails {
+  /** @format float */
+  price: number;
+  bundle: string[];
+}
+
+export interface PriceWithDetails {
+  /** @format float */
+  total: number;
+  details: PriceDetails[];
+}
 
 export interface Bar {
   /** @format int64 */
@@ -228,6 +246,42 @@ export class Api<
       this.request<Bar, Error>({
         path: `/bars/${barId}`,
         method: 'GET',
+        format: 'json',
+        ...params,
+      }),
+  };
+  drinks = {
+    /**
+     * No description
+     *
+     * @tags drinks
+     * @name ListDrinks
+     * @summary List all drinks
+     * @request GET:/drinks
+     */
+    listDrinks: (params: RequestParams = {}) =>
+      this.request<Drink[], Error>({
+        path: `/drinks`,
+        method: 'GET',
+        format: 'json',
+        ...params,
+      }),
+  };
+  calculatePrice = {
+    /**
+     * No description
+     *
+     * @tags price
+     * @name CalculatePrice
+     * @summary Calculate price with details for given drinks
+     * @request POST:/calculatePrice
+     */
+    calculatePrice: (data: { drinks?: string[] }, params: RequestParams = {}) =>
+      this.request<PriceWithDetails, Error>({
+        path: `/calculatePrice`,
+        method: 'POST',
+        body: data,
+        type: ContentType.Json,
         format: 'json',
         ...params,
       }),

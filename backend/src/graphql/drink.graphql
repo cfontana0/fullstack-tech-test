@@ -1,0 +1,20 @@
+type Drink {
+  name: String!
+  price: Float!
+  img: String!
+}
+
+type PriceDetails {
+  price: Float!
+  bundle: [String!]!
+}
+
+type PriceWithDetails {
+  total: Float!
+  details: [PriceDetails!]!
+}
+
+type Query {
+  drinks: [Drink!]!
+  calculatePrice(drinks: [String!]!): PriceWithDetails!
+}

@@ -79,11 +79,99 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
+  /drinks:
+    get:
+      summary: List all drinks
+      operationId: listDrinks
+      tags:
+        - drinks
+      responses:
+        '200':
+          description: An array of drinks
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Drink'
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /calculatePrice:
+    post:
+      summary: Calculate price with details for given drinks
+      operationId: calculatePrice
+      tags:
+        - price
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                drinks:
+                  type: array
+                  items:
+                    type: string
+      responses:
+        '200':
+          description: Total price with details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PriceWithDetails'
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
 components:
   schemas:
-    StringNullable:
-      type: string
-      nullable: true
+    # existing schemas
+    Drink:
+      type: object
+      required:
+        - name
+        - price
+        - img
+      properties:
+        name:
+          type: string
+        price:
+          type: number
+          format: float
+        img:
+          type: string
+    PriceDetails:
+      type: object
+      required:
+        - price
+        - bundle
+      properties:
+        price:
+          type: number
+          format: float
+        bundle:
+          type: array
+          items:
+            type: string
+    PriceWithDetails:
+      type: object
+      required:
+        - total
+        - details
+      properties:
+        total:
+          type: number
+          format: float
+        details:
+          type: array
+          items:
+            $ref: '#/components/schemas/PriceDetails'
     Bar:
       type: object
       required:

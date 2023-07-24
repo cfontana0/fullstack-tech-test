@@ -22,15 +22,36 @@ export type Bar = {
   name?: Maybe<Scalars['String']>;
 };
 
+export type Drink = {
+  __typename?: 'Drink';
+  img: Scalars['String'];
+  name: Scalars['String'];
+  price: Scalars['Float'];
+};
+
 export type Foo = {
   __typename?: 'Foo';
   id: Scalars['ID'];
   name?: Maybe<Scalars['String']>;
 };
 
+export type PriceDetails = {
+  __typename?: 'PriceDetails';
+  bundle: Array<Scalars['String']>;
+  price: Scalars['Float'];
+};
+
+export type PriceWithDetails = {
+  __typename?: 'PriceWithDetails';
+  details: Array<PriceDetails>;
+  total: Scalars['Float'];
+};
+
 export type Query = {
   __typename?: 'Query';
   bar?: Maybe<Bar>;
+  calculatePrice: PriceWithDetails;
+  drinks: Array<Drink>;
   foos?: Maybe<Array<Maybe<Foo>>>;
   hello?: Maybe<Scalars['String']>;
 };
@@ -38,6 +59,11 @@ export type Query = {
 
 export type QueryBarArgs = {
   id: Scalars['ID'];
+};
+
+
+export type QueryCalculatePriceArgs = {
+  drinks: Array<Scalars['String']>;
 };
 
 export type WithIndex<TObject> = TObject & Record<string, any>;
@@ -123,8 +149,12 @@ export type DirectiveResolverFn<TResult = {}, TParent = {}, TContext = {}, TArgs
 export type ResolversTypes = ResolversObject<{
   Bar: ResolverTypeWrapper<Bar>;
   String: ResolverTypeWrapper<Scalars['String']>;
+  Drink: ResolverTypeWrapper<Drink>;
+  Float: ResolverTypeWrapper<Scalars['Float']>;
   Foo: ResolverTypeWrapper<Foo>;
   ID: ResolverTypeWrapper<Scalars['ID']>;
+  PriceDetails: ResolverTypeWrapper<PriceDetails>;
+  PriceWithDetails: ResolverTypeWrapper<PriceWithDetails>;
   Query: ResolverTypeWrapper<{}>;
   Boolean: ResolverTypeWrapper<Scalars['Boolean']>;
 }>;
@@ -133,8 +163,12 @@ export type ResolversTypes = ResolversObject<{
 export type ResolversParentTypes = ResolversObject<{
   Bar: Bar;
   String: Scalars['String'];
+  Drink: Drink;
+  Float: Scalars['Float'];
   Foo: Foo;
   ID: Scalars['ID'];
+  PriceDetails: PriceDetails;
+  PriceWithDetails: PriceWithDetails;
   Query: {};
   Boolean: Scalars['Boolean'];
 }>;
@@ -153,6 +187,13 @@ export type BarResolvers<ContextType = DataSourceContext, ParentType extends Res
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 }>;
 
+export type DrinkResolvers<ContextType = DataSourceContext, ParentType extends ResolversParentTypes['Drink'] = ResolversParentTypes['Drink']> = ResolversObject<{
+  img?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  price?: Resolver<ResolversTypes['Float'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+}>;
+
 export type FooResolvers<ContextType = DataSourceContext, ParentType extends ResolversParentTypes['Foo'] = ResolversParentTypes['Foo']> = ResolversObject<{
   __resolveReference?: ReferenceResolver<Maybe<ResolversTypes['Foo']>, { __typename: 'Foo' } & GraphQLRecursivePick<ParentType, {"id":true}>, ContextType>;
   id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
@@ -160,15 +201,32 @@ export type FooResolvers<ContextType = DataSourceContext, ParentType extends Res
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 }>;
 
+export type PriceDetailsResolvers<ContextType = DataSourceContext, ParentType extends ResolversParentTypes['PriceDetails'] = ResolversParentTypes['PriceDetails']> = ResolversObject<{
+  bundle?: Resolver<Array<ResolversTypes['String']>, ParentType, ContextType>;
+  price?: Resolver<ResolversTypes['Float'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+}>;
+
+export type PriceWithDetailsResolvers<ContextType = DataSourceContext, ParentType extends ResolversParentTypes['PriceWithDetails'] = ResolversParentTypes['PriceWithDetails']> = ResolversObject<{
+  details?: Resolver<Array<ResolversTypes['PriceDetails']>, ParentType, ContextType>;
+  total?: Resolver<ResolversTypes['Float'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+}>;
+
 export type QueryResolvers<ContextType = DataSourceContext, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = ResolversObject<{
   bar?: Resolver<Maybe<ResolversTypes['Bar']>, ParentType, ContextType, RequireFields<QueryBarArgs, 'id'>>;
+  calculatePrice?: Resolver<ResolversTypes['PriceWithDetails'], ParentType, ContextType, RequireFields<QueryCalculatePriceArgs, 'drinks'>>;
+  drinks?: Resolver<Array<ResolversTypes['Drink']>, ParentType, ContextType>;
   foos?: Resolver<Maybe<Array<Maybe<ResolversTypes['Foo']>>>, ParentType, ContextType>;
   hello?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
 }>;
 
 export type Resolvers<ContextType = DataSourceContext> = ResolversObject<{
   Bar?: BarResolvers<ContextType>;
+  Drink?: DrinkResolvers<ContextType>;
   Foo?: FooResolvers<ContextType>;
+  PriceDetails?: PriceDetailsResolvers<ContextType>;
+  PriceWithDetails?: PriceWithDetailsResolvers<ContextType>;
   Query?: QueryResolvers<ContextType>;
 }>;
 
